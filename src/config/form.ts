@@ -8,21 +8,21 @@ type FormConfig = { action: string; entries: Record<string, string> };
 
 /** お問い合わせ */
 export const contactForm = {
-  action: env.PUBLIC_GFORM_ACTION ?? 'https://docs.google.com/forms/d/e/1FAIpQLScP5eUemL9Nqk2uY51N9onDJA3yWdAtJPtoqUm6Q3CBuxPObw/formResponse',
+  action: env.PUBLIC_GFORM_ACTION || 'https://docs.google.com/forms/d/e/1FAIpQLScP5eUemL9Nqk2uY51N9onDJA3yWdAtJPtoqUm6Q3CBuxPObw/formResponse',
   entries: {
-    name: env.PUBLIC_GFORM_ENTRY_NAME ?? 'entry.1412518462',
-    email: env.PUBLIC_GFORM_ENTRY_EMAIL ?? 'entry.820629378',
-    type: env.PUBLIC_GFORM_ENTRY_TYPE ?? 'entry.1559994908',
-    message: env.PUBLIC_GFORM_ENTRY_MESSAGE ?? 'entry.563152595',
+    name: env.PUBLIC_GFORM_ENTRY_NAME || 'entry.1412518462',
+    email: env.PUBLIC_GFORM_ENTRY_EMAIL || 'entry.820629378',
+    type: env.PUBLIC_GFORM_ENTRY_TYPE || 'entry.1559994908',
+    message: env.PUBLIC_GFORM_ENTRY_MESSAGE || 'entry.563152595',
   },
 } satisfies FormConfig;
 
 /** 更新情報・テストプレイの登録 */
 export const notifyForm = {
-  action: env.PUBLIC_GFORM_NOTIFY_ACTION ?? 'https://docs.google.com/forms/d/e/1FAIpQLSc_7jls6EL-4N_6OFVpwV9P2_ZJrwFX4OPdWgYEstiIZ4hqeg/formResponse',
+  action: env.PUBLIC_GFORM_NOTIFY_ACTION || 'https://docs.google.com/forms/d/e/1FAIpQLSc_7jls6EL-4N_6OFVpwV9P2_ZJrwFX4OPdWgYEstiIZ4hqeg/formResponse',
   entries: {
-    email: env.PUBLIC_GFORM_NOTIFY_ENTRY_EMAIL ?? 'entry.981333461',
-    kind: env.PUBLIC_GFORM_NOTIFY_ENTRY_KIND ?? 'entry.278956799',
+    email: env.PUBLIC_GFORM_NOTIFY_ENTRY_EMAIL || 'entry.981333461',
+    kind: env.PUBLIC_GFORM_NOTIFY_ENTRY_KIND || 'entry.278956799',
   },
 } satisfies FormConfig;
 
