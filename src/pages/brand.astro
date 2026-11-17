@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { withBase } from '../lib/url';
+
+const assets = [
+  { name: 'ロゴ', file: 'logo.png', size: '2172 × 724 px' },
+  { name: 'アイコン', file: 'icon.png', size: '400 × 400 px' },
+  { name: 'OGP 画像', file: 'ogp-image.png', size: '1200 × 630 px' },
+];
+const colors = [
+  { name: 'Pure White', hex: '#FFFFFF' },
+  { name: 'Off White', hex: '#F8FAFC' },
+  { name: 'Charcoal', hex: '#1E232A' },
+  { name: 'Electric Blue', hex: '#1D8FE1' },
+];
+---
+
+<Base title="ブランド素材｜FUREQ" description="FUREQ のロゴ、アイコン、OGP 画像、ブランドカラーです。">
+  <section class="wrap py-24 md:py-32">
+    <SectionHead label="Brand" title="ブランド素材" lead="紹介や取材でお使いいただける、ロゴとカラーの素材です。" />
+
+    <h2 class="meta mt-16">Logo</h2>
+    <ul class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+      {
+        assets.map((a) => (
+          <li class="flex flex-col overflow-hidden rounded-xl border border-line">
+            <div class="flex h-40 items-center justify-center border-b border-line bg-paper p-6">
+              <img src={withBase(a.file)} alt={a.name} class="max-h-full w-auto object-contain" />
+            </div>
+            <div class="flex items-center justify-between gap-4 p-5">
+              <div>
+                <p class="text-base font-medium">{a.name}</p>
+                <p class="meta">{a.size}</p>
+              </div>
+              <a
+                href={withBase(a.file)}
+                download
+                class="inline-flex h-8 items-center rounded-md border border-line px-3 text-sm text-ink-2 transition-colors hover:border-line-strong hover:text-ink"
+              >
+                ダウンロード
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="meta mt-16">Color</h2>
+    <ul class="mt-4 grid grid-cols-2 gap-6 md:grid-cols-4">
+      {
+        colors.map((c) => (
+          <li class="overflow-hidden rounded-xl border border-line">
+            <div class="h-20 border-b border-line" style={`background:${c.hex}`}></div>
+            <div class="p-5">
+              <p class="text-base font-medium">{c.name}</p>
+              <p class="meta">{c.hex}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

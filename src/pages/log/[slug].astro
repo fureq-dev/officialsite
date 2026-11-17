@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import { logEntries } from '../../lib/log';
+import { withBase } from '../../lib/url';
+
+export function getStaticPaths() {
+  return logEntries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = entry;
+---
+
+<Base title={`${entry.title}｜FUREQ`} description={entry.summary}>
+  <article class="wrap py-24 md:py-32">
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
+      <div class="md:col-span-3">
+        <a href={withBase('log/')} class="text-sm text-ink-3 transition-colors hover:text-ink">開発ログ一覧</a>
+        <p class="meta mt-4">{entry.date}</p>
+      </div>
+      <div class="md:col-span-9">
+        <h1 class="text-3xl font-medium leading-snug md:text-4xl">{entry.title}</h1>
+        <div class="prose-fureq mt-12 max-w-[640px]">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>

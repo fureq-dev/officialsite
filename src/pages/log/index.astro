@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import { logEntries } from '../../lib/log';
+import { withBase } from '../../lib/url';
+---
+
+<Base title="開発ログ｜FUREQ" description="FUREQ の開発状況と、お知らせの記録です。">
+  <section class="wrap py-24 md:py-32">
+    <SectionHead label="Log" title="開発ログ" lead="開発の状況と、お知らせの記録です。" />
+    <ul class="mt-16 border-b border-line">
+      {
+        logEntries.map((e) => (
+          <li class="border-t border-line">
+            <a href={withBase(`log/${e.slug}/`)} class="group grid grid-cols-1 gap-2 py-6 md:grid-cols-12 md:gap-8">
+              <p class="meta md:col-span-3">{e.date}</p>
+              <div class="md:col-span-9">
+                <h2 class="text-xl font-medium leading-8 transition-colors group-hover:text-ink-2">{e.title}</h2>
+                <p class="mt-1 text-base leading-8 text-ink-2">{e.summary}</p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

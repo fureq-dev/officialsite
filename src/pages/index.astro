@@ -1,0 +1,197 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import HeroCompass from '../components/HeroCompass';
+import ValueIndex from '../components/ValueIndex';
+import Showcase from '../components/Showcase';
+import NotifyForm from '../components/NotifyForm';
+import ContactForm from '../components/ContactForm';
+import { coreValues } from '../data/values';
+import { members } from '../data/members';
+import { links } from '../data/links';
+import { logEntries } from '../lib/log';
+import { withBase } from '../lib/url';
+
+const logo = withBase('logo.png');
+const latest = logEntries.slice(0, 3);
+const hasMembers = members.length > 0;
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-paper">
+    <HeroCompass client:load />
+
+    <div class="wrap relative flex min-h-[calc(100svh-64px)] flex-col justify-between gap-16 pt-16 md:pt-24">
+      <div class="max-w-[640px]">
+        <img data-reveal src={logo} alt="FUREQ" class="h-20 w-auto md:h-28" />
+        <h1 data-reveal class="mt-12 text-4xl font-medium leading-[1.3] tracking-[-0.01em] md:text-6xl md:leading-[1.25]">
+          ゲームの面白さを<br />追求する開発プロダクト
+        </h1>
+        <p data-reveal class="mt-8 max-w-[520px] text-base leading-8 text-ink-2">
+          FUREQ は、ゲームの面白さそのものを追求するゲーム開発プロダクトです。Fun・Uniqueness・Replayability・Excitement・Quest の5つを判断の軸に、企画から開発まで手がけています。
+        </p>
+        <div data-reveal class="mt-12 flex items-center gap-6">
+          <a
+            href="#titles"
+            class="inline-flex h-12 items-center rounded-lg bg-ink px-8 text-base font-medium text-paper transition-colors hover:bg-ink-hover active:scale-[0.98]"
+          >
+            タイトルを見る
+          </a>
+          <a href="#updates" class="text-base text-ink-2 underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink">
+            更新情報を受け取る
+          </a>
+        </div>
+      </div>
+
+      <ul data-reveal class="grid grid-cols-2 border-t border-line bg-paper md:grid-cols-5">
+        {
+          coreValues.map((v, i) => (
+            <li class:list={['flex flex-col gap-1 py-6 pr-4', i > 0 && 'md:border-l md:border-line md:pl-6', i % 2 === 1 && 'pl-4 border-l border-line md:pl-6']}>
+              <span class="font-mono text-base">{v.letter}</span>
+              <span class="text-base font-medium">{v.en}</span>
+              <span class="text-sm text-ink-3">{v.ja}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section bg-canvas">
+    <div class="wrap">
+      <SectionHead label="About" title="面白さの追求を、目標にしています" />
+      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-12">
+        <div class="max-w-[640px] space-y-6 text-base leading-8 text-ink-2 md:col-span-9 md:col-start-4">
+          <p>FUREQ は、ゲームの面白さを追求することを目標にしたゲーム開発プロダクトです。</p>
+          <p>まだリリースしたタイトルはありません。現在は、最初の1作を開発しています。その過程は、このサイトの開発ログで公開していきます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Index -->
+  <section id="index" class="section bg-paper">
+    <div class="wrap">
+      <div class="mb-16">
+        <SectionHead
+          label="Core values"
+          title="5つの頭文字が、開発の判断基準"
+          lead="企画、実装、調整のどの段階でも、この5つに照らして決めます。"
+        />
+      </div>
+      <ValueIndex client:visible />
+    </div>
+  </section>
+
+  <!-- Titles -->
+  <section id="titles" class="section bg-canvas">
+    <div class="wrap">
+      <div class="mb-12">
+        <SectionHead label="Titles" title="開発中・リリース済みのタイトル" />
+      </div>
+      <Showcase client:visible />
+    </div>
+  </section>
+
+  <!-- Log -->
+  <section id="log" class="section bg-paper">
+    <div class="wrap">
+      <SectionHead label="Log" title="開発ログ" lead="開発の状況と、お知らせの記録です。" />
+      <ul class="mt-12 border-b border-line">
+        {
+          latest.map((e) => (
+            <li class="border-t border-line">
+              <a href={withBase(`log/${e.slug}/`)} class="group grid grid-cols-1 gap-2 py-6 md:grid-cols-12 md:gap-8">
+                <p class="meta md:col-span-3">{e.date}</p>
+                <div class="md:col-span-9">
+                  <h3 class="text-lg font-medium leading-7 transition-colors group-hover:text-ink-2">{e.title}</h3>
+                  <p class="mt-1 text-sm leading-6 text-ink-2">{e.summary}</p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a
+        href={withBase('log/')}
+        class="mt-8 inline-flex text-base text-ink-2 underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink"
+      >
+        開発ログをすべて見る
+      </a>
+    </div>
+  </section>
+
+  <!-- Updates -->
+  <section id="updates" class="section bg-canvas">
+    <div class="wrap">
+      <SectionHead
+        label="Updates"
+        title="開発の更新とテストプレイのご案内"
+        lead="最初のタイトルの開発状況を、メールでお知らせします。テストプレイを実施する場合の案内も、こちらからお送りします。"
+      />
+      <div class="mt-12 grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
+        <div class="max-w-[720px] md:col-span-9 md:col-start-4">
+          <NotifyForm client:visible />
+          {
+            links.filter((l) => l.url).length > 0 && (
+              <ul class="mt-12 flex flex-wrap gap-x-8 gap-y-2 border-t border-line pt-8">
+                {links
+                  .filter((l) => l.url)
+                  .map((l) => (
+                    <li>
+                      <a
+                        href={l.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-base text-ink-2 underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink"
+                      >
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Members（data/members.ts に1人以上入れると表示） -->
+  {
+    hasMembers && (
+      <section id="members" class="section bg-paper">
+        <div class="wrap">
+          <SectionHead label="Members" title="メンバー" />
+          <ul class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {members.map((m) => (
+              <li class="rounded-xl border border-line p-6">
+                <p class="text-lg font-medium leading-7">{m.name}</p>
+                <p class="meta">{m.role}</p>
+                {m.note && <p class="mt-3 text-sm leading-6 text-ink-2">{m.note}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Contact -->
+  <section id="contact" class:list={['section', hasMembers ? 'bg-canvas' : 'bg-paper']}>
+    <div class="wrap">
+      <SectionHead
+        label="Contact"
+        title="ご相談・取材・ご感想はこちらから"
+        lead="内容を確認のうえ、ご入力のメールアドレスへご連絡します。"
+      />
+      <div class="mt-12 grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
+        <div class="max-w-[720px] md:col-span-9 md:col-start-4">
+          <ContactForm client:visible />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

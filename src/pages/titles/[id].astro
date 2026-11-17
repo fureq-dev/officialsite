@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+import GameCover from '../../components/GameCover';
+import StageRuler from '../../components/StageRuler.astro';
+import { games, stages, statusLabel } from '../../data/games';
+import { withBase } from '../../lib/url';
+
+export function getStaticPaths() {
+  return games.map((game) => ({ params: { id: game.id }, props: { game } }));
+}
+
+const { game } = Astro.props;
+const stage = game.status === 'released' ? stages.length - 1 : (game.stage ?? 0);
+const facts = [
+  ['ジャンル', game.genre],
+  ['プラットフォーム', game.platform],
+  ['プレイ人数', game.players],
+].filter(([, v]) => v);
+---
+
+<Base title={`${game.title}｜FUREQ`} description={game.summary}>
+  <article class="wrap py-24 md:py-32">
+    <a href={`${withBase('')}#titles`} class="text-sm text-ink-3 transition-colors hover:text-ink">タイトル一覧</a>
+
+    <header class="mt-8 max-w-[720px]">
+      <p class="inline-flex items-center gap-2 text-sm text-ink-3">
+        <span
+          aria-hidden="true"
+          class:list={['h-2 w-2 rounded-full border border-ink', game.status === 'released' ? 'bg-ink' : 'bg-transparent']}></span>
+        {statusLabel[game.status]}
+      </p>
+      <h1 class="mt-2 text-4xl font-medium leading-tight md:text-5xl">{game.title}</h1>
+      <p class="mt-6 text-base leading-8 text-ink-2">{game.detail}</p>
+    </header>
+
+    <div class="mt-16 aspect-[8/3] overflow-hidden rounded-xl border border-line bg-canvas">
+      <GameCover className="h-full w-full" />
+    </div>
+
+    <section class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-12" aria-labelledby="stage-title">
+      <h2 id="stage-title" class="meta md:col-span-3">開発の段階</h2>
+      <div class="md:col-span-9">
+        <StageRuler stages={stages} current={stage} />
+      </div>
+    </section>
+
+    {
+      facts.length > 0 && (
+        <dl class="mt-16 grid grid-cols-1 gap-8 border-t border-line pt-8 md:grid-cols-12">
+          {facts.map(([k, v]) => (
+            <div class="md:col-span-3">
+              <dt class="text-sm text-ink-3">{k}</dt>
+              <dd class="mt-1 text-base">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <p class="mt-16 border-t border-line pt-8 text-base leading-8 text-ink-2">
+      開発の状況は<a href={withBase('log/')} class="underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink">開発ログ</a>でお知らせします。
+    </p>
+  </article>
+</Base>

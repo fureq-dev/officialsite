@@ -1,0 +1,29 @@
+---
+interface Props {
+  stages: string[];
+  current: number;
+}
+const { stages, current } = Astro.props;
+const n = stages.length;
+---
+
+<div role="img" aria-label={`開発の段階: ${stages[current]}（${current + 1} / ${n}）`}>
+  <div class="relative pt-8">
+    <!-- 針: 現在の段階の中心を指す -->
+    <span
+      aria-hidden="true"
+      class="absolute top-0 h-8 w-[2px] -translate-x-1/2 bg-signal"
+      style={`left:${((current + 0.5) / n) * 100}%`}></span>
+    <div class="grid border-t border-ink/40" style={`grid-template-columns:repeat(${n},1fr)`}>
+      {
+        stages.map((s, i) => (
+          <div class="relative border-l border-line pb-1 pt-4 text-center first:border-l-0">
+            <span aria-hidden="true" class="absolute left-1/2 top-0 h-2 w-px bg-ink/40" />
+            <p class:list={['text-sm', i === current ? 'font-medium text-ink' : 'text-ink-3']}>{s}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+  <p class="meta mt-4">stage {current + 1} / {n}</p>
+</div>

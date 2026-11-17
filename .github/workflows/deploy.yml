@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://${{ github.repository_owner }}.github.io
+      # ユーザーページ（<user>.github.io）で公開する場合は、この行を "/" に変更
+      BASE_PATH: /${{ github.event.repository.name }}
+      # リポジトリの Settings > Secrets and variables > Actions > Variables に登録
+      PUBLIC_GFORM_ACTION: ${{ vars.PUBLIC_GFORM_ACTION }}
+      PUBLIC_GFORM_ENTRY_NAME: ${{ vars.PUBLIC_GFORM_ENTRY_NAME }}
+      PUBLIC_GFORM_ENTRY_EMAIL: ${{ vars.PUBLIC_GFORM_ENTRY_EMAIL }}
+      PUBLIC_GFORM_ENTRY_TYPE: ${{ vars.PUBLIC_GFORM_ENTRY_TYPE }}
+      PUBLIC_GFORM_ENTRY_MESSAGE: ${{ vars.PUBLIC_GFORM_ENTRY_MESSAGE }}
+      PUBLIC_GFORM_NOTIFY_ACTION: ${{ vars.PUBLIC_GFORM_NOTIFY_ACTION }}
+      PUBLIC_GFORM_NOTIFY_ENTRY_EMAIL: ${{ vars.PUBLIC_GFORM_NOTIFY_ENTRY_EMAIL }}
+      PUBLIC_GFORM_NOTIFY_ENTRY_KIND: ${{ vars.PUBLIC_GFORM_NOTIFY_ENTRY_KIND }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install, build, and upload
+        uses: withastro/action@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

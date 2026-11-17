@@ -1,0 +1,203 @@
+@import 'tailwindcss';
+
+/* ---------- Tokens ----------
+   Neutral ramp: pure white / off-white canvas / charcoal ink.
+   Signal blue is reserved for the compass needle and the selected index mark. */
+@theme {
+  --font-sans: 'IBM Plex Sans JP', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --color-paper: #ffffff;
+  --color-canvas: #f8fafc;
+  --color-ink: #1e232a;
+  --color-ink-2: #4a5159; /* secondary text */
+  --color-ink-3: #69717a; /* muted text (4.5:1 on white and canvas) */
+  --color-line: rgb(30 35 42 / 0.1);
+  --color-line-strong: rgb(30 35 42 / 0.4);
+  --color-signal: #1d8fe1;
+  --color-ink-hover: #2f3640;
+
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: rgb(30 35 42 / 0.12);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 2px;
+  }
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .wrap {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 32px;
+    }
+  }
+  .section {
+    position: relative;
+    padding-block: 96px;
+  }
+  /* セクションの境目: ヘアラインの目盛り（8px ごとの細目盛りと 80px ごとの太目盛り） */
+  .section::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 12px;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgb(30 35 42 / 0.45) 1px, transparent 1px),
+      linear-gradient(to right, rgb(30 35 42 / 0.2) 1px, transparent 1px),
+      linear-gradient(rgb(30 35 42 / 0.14) 1px, transparent 1px);
+    background-size:
+      80px 12px,
+      8px 6px,
+      100% 1px;
+    background-repeat: repeat-x, repeat-x, no-repeat;
+  }
+  @media (min-width: 768px) {
+    .section {
+      padding-block: 128px;
+    }
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--color-ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .prose-fureq p {
+    margin-top: 24px;
+    font-size: 16px;
+    line-height: 32px;
+    color: var(--color-ink-2);
+  }
+  .prose-fureq p:first-child {
+    margin-top: 0;
+  }
+  .prose-fureq h2 {
+    margin-top: 48px;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 36px;
+  }
+  .prose-fureq ul {
+    margin-top: 24px;
+    padding-left: 24px;
+    list-style: disc;
+    line-height: 32px;
+    color: var(--color-ink-2);
+  }
+  .prose-fureq a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-line-strong);
+    text-underline-offset: 4px;
+  }
+  .keycap {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding-inline: 8px;
+    border: 1px solid var(--color-line-strong);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1;
+    color: var(--color-ink-2);
+  }
+}
+
+/* ---------- Motion ---------- */
+/* Hero entrance: one short fade-and-rise, re-run on every astro:page-load */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(8px);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 480ms var(--ease-standard),
+    transform 480ms var(--ease-standard);
+  transition-delay: var(--d, 0ms);
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.anim-rise {
+  animation: fade-rise 360ms var(--ease-standard) both;
+  animation-delay: var(--d, 0ms);
+}
+.anim-letter {
+  animation: letter-in 420ms var(--ease-standard) both;
+}
+
+dialog.game-dialog[open] {
+  animation: fade-rise 240ms var(--ease-standard) both;
+}
+dialog.game-dialog::backdrop {
+  background: rgb(30 35 42 / 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  .anim-rise,
+  .anim-letter,
+  dialog.game-dialog[open] {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
